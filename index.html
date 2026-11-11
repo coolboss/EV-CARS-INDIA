@@ -296,6 +296,7 @@ main[tabindex]:focus,main[tabindex]:focus-visible{outline:none}
    dc = minutes for roughly 10-80% on a DC fast charger, dce:1 means the number is a class estimate
    m = [min for 20-80%, min for 80-100% (0 = not reported), test charger kW] measured by Autocar India; meas:1 means dc was derived from it
    src = link to the independent test article for the tested range
+   rs = [city km, highway km] when the test article reports the split (the tested figure is the blend of the two)
    ac = onboard AC charger kW (estimate unless noted)   conf: h = well cross-checked, m = some conflict, l = thin data */
 var CARS = [
 /* ---------- up to 30 kWh : small city cars ---------- */
@@ -365,9 +366,9 @@ var CARS = [
 {id:'be6',br:'Mahindra',nm:'BE 6 Sporteq',bat:79,bats:'59 / 70 / 79',p:[19.45,27.70],cl:683,re:449,rk:'T',body:'SUV coupe',seats:5,dc:38,meas:1,m:[33,35,150],ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 31.97/32, child 45/49)',conf:'m',
  baas:{type:'B',own:19.45,price:11.45,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'449 km comes from a test of the regular BE 6 79 kWh, not the Sporteq. Charges at up to 180 kW.'},
-{id:'xev9e',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9e-real-world-range-tested-explained-436045',br:'Mahindra',nm:'XEV 9e',bat:79,bats:'59 / 79',p:[21.90,31.25],cl:656,re:456,rk:'T',body:'SUV coupe',seats:5,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'h',pick:'long5',
+{id:'xev9e',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9e-real-world-range-tested-explained-436045',br:'Mahindra',nm:'XEV 9e',bat:79,bats:'59 / 79',p:[21.90,31.25],cl:656,re:456,rs:[425,488],rk:'T',body:'SUV coupe',seats:5,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'h',pick:'long5',
  baas:{type:'B',own:21.90,price:13.90,perKm:3.75,basis:1800,variant:'59 kWh'},
- note:'Great ride, big boot, 180 kW charging. The 20-minute fast-charge time is the maker’s figure: the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger in Autocar’s test. The touchscreen software is complex but Autocar says updates fixed earlier bugs. Owners report waits of about 4 months for top variants.'},
+ note:'Great ride, big boot, 180 kW charging. Autocar’s 456 km is a blend: 425 km on its city loop and 488 km on its highway loop, worked out from the charge used in about 40°C heat, not by driving to empty. Mahindra says 500 km or more in real use. Mild weather and gentle driving can beat 456 km, and hard driving or heat can fall short. The 20-minute fast-charge time is the maker’s figure: the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger in Autocar’s test. The touchscreen software is complex but Autocar says updates fixed earlier bugs. Owners report waits of about 4 months for top variants.'},
 {id:'xev9s',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9s-real-world-range-tested-explained-440015',br:'Mahindra',nm:'XEV 9S',bat:79,bats:'59 / 70 / 79',p:[20.65,30.90],cl:679,re:478,rk:'T',body:'SUV',seats:7,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'',conf:'m',pick:'long7',
  baas:{type:'B',own:20.65,price:12.65,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'Went the furthest of any mass-market EV in Autocar’s tests (477.5 km). No separate crash-test result found for the 9S. The 20-minute fast-charge time is the maker’s figure (the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger). Three rows or six captain seats. Starting price is listed from ₹19.95 to ₹21.40 lakh by different sources.'},
@@ -940,7 +941,8 @@ function viewLearn(){
   '<section class="sec" id="learn-range">'+secHead('','Step 6 · Range','Claimed vs real range','Light bar is the maker’s claim. Dark bar is what independent tests measured. Hover or tap a bar for details.')+
   '<div class="card">'+chart+'<div class="legend" style="margin-top:8px"><span><i style="background:var(--s1-soft)"></i>Claimed (ARAI / MIDC)</span><span><i style="background:var(--s1)"></i>Tested on real roads</span></div></div>'+
   '<div class="cols2" style="margin-top:14px"><div class="note info"><span class="lbl">Simple rule</span><p>Plan with about 65% to 90% of the claimed range. Efficient cars like the Creta Electric and MG Windsor came close to their claims. Big SUVs fell further short.</p></div>'+
-  '<div class="note warn"><span class="lbl">Stops are shorter than range</span><p>You rarely drive from 100% to 0%. If you charge between 20% and 80%, the distance between stops is about 60% of the full range. Always keep a buffer.</p></div></div></section>'+
+  '<div class="note warn"><span class="lbl">Stops are shorter than range</span><p>You rarely drive from 100% to 0%. If you charge between 20% and 80%, the distance between stops is about 60% of the full range. Always keep a buffer.</p></div></div>'+
+  note('info','How the tested number is made','<p>Most tested figures here come from Autocar India. In its XEV 9e test it drove a fixed city loop and a fixed highway loop with the AC at 22°C, then worked out the range from the share of charge used. The result is a blend of city and highway, so think of it as a middle value, not a limit. Heat, traffic and a heavy car push it down. Mild weather and steady driving can beat it, and fast highway driving can fall below it. Other testers use other methods, so numbers differ by source. Where a test reports the city and highway split, the car card shows it.</p>').replace('class="note info"','class="note info" style="margin-top:14px"')+'</section>'+
 
   /* driving */
   '<section class="sec" id="learn-drive">'+secHead('','Step 7 · On the road','Driving your first EV','What feels different in the first week.')+
@@ -1059,7 +1061,7 @@ function carCard(c,o){
     '<dt>Battery</dt><dd>'+esc(c.bats)+' kWh · '+CLASS_LABEL[batClass(c.bat)]+'</dd>'+
     '<dt>Seats · body</dt><dd>'+c.seats+' · '+esc(c.body)+'</dd>'+
     '<dt>Claimed range</dt><dd>'+(c.cl?c.cl+' km':'not found')+'</dd>'+
-    '<dt>Real range</dt><dd>'+(c.re?c.re+' km '+(c.rk==='T'?'(independent test)':'(estimate)'):'No reliable figure found')+(pct?' · '+pct+'% of claim':'')+'</dd>'+
+    '<dt>Real range</dt><dd>'+(c.re?c.re+' km '+(c.rk==='T'?'(independent test)':'(estimate)'):'No reliable figure found')+(pct?' · '+pct+'% of claim':'')+(c.rs?'<br><span class="muted">City loop '+c.rs[0]+' km, highway loop '+c.rs[1]+' km. The tested figure blends the two.</span>':'')+'</dd>'+
     '<dt>Range source</dt><dd>'+(c.src?'<a href="'+c.src+'" target="_blank" rel="noopener noreferrer">Independent test article (Autocar India)</a>':(c.rk==='T'?'Reader-supplied guide and press reports':c.rk==='E'?'Estimate from the claim and similar cars':'None found'))+'</dd>'+
     '<dt>Efficiency</dt><dd>'+(c.re?(c.re/c.bat).toFixed(1)+' km per kWh':'-')+'</dd>'+
     '<dt>Fast charging</dt><dd>'+(c.dc?(c.meas?'about '+c.dc+' min for 10-80%. Measured: '+c.m[0]+' min for 20-80%'+(c.m[1]?', '+c.m[1]+' min for 80-100%':'')+' on a '+c.m[2]+' kW charger (Autocar India)':'about '+c.dc+' min for 10-80%'+(c.dce?' (class estimate)':' (maker or review figure, not measured)')):'AC charging only')+'</dd>'+
