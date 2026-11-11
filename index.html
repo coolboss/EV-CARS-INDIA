@@ -262,6 +262,27 @@ details.chk>ul{padding-bottom:12px}
 @media(min-width:600px){.grid.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:1040px){.grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
+/* skip link and focus target */
+.skip{position:absolute;left:8px;top:-60px;z-index:100;background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+.skip:focus{top:8px}
+main[tabindex]:focus,main[tabindex]:focus-visible{outline:none}
+/* printing */
+@media print{
+  html,body{background:#fff!important;color:#000!important}
+  .topbar,.bottomnav,.skip,.jump,.tools,.chips,iframe,.livemap,#lv-box,#cmpbar,button.chip,[data-go],.btn{display:none!important}
+  main.wrap{max-width:none;padding:0}
+  .card,.note,details,.tbl,tr,.car{break-inside:avoid;box-shadow:none!important}
+  .tbl{overflow:visible!important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:.8em;word-break:break-all}
+  .view[hidden]{display:none!important}
+}
+/* Windows high-contrast and similar */
+@media(forced-colors:active){
+  .chip,.btn,.tbtn,.pill,.card,.note,details.chk,.tabs a,.bottomnav a{border:1px solid CanvasText}
+  .chip[aria-pressed="true"],.tabs a[aria-current="page"],.bottomnav a[aria-current="page"]{border:2px solid Highlight;forced-color-adjust:none;background:Highlight;color:HighlightText}
+  :focus-visible{outline:3px solid Highlight!important}
+}
+
 </style>
 </head>
 <body>
@@ -282,7 +303,7 @@ var CARS = [
  note:'Small solar-assisted three-seat city car. The maker shows pre-bookings closed, so confirm you can actually buy one. AC charging only.'},
 {id:'comet',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'MG',nm:'Comet EV',bat:17.3,bats:'17.3',p:[7.80,10.17],cl:230,re:193,rk:'T',body:'Microcar',seats:4,dc:0,ac:3.3,wr:'Sources differ: 8 yr / 1.2 lakh km, or lifetime for first owner',ncap:'',conf:'m',
  baas:{type:'A',own:7.80,price:4.99,perKm:3.2,minKm:1500,variant:'Comet EV'},
- note:'Two-door and very easy to park. Most efficient EV tested (11.17 km/kWh). No fast charging, so it is a city car only.'},
+ note:'Two-door and very easy to park. Most efficient EV tested (about 11 km/kWh). No fast charging, so it is a city car only.'},
 {id:'tiago',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Tiago EV',bat:24,bats:'19.2 / 24',p:[6.99,10.09],cl:275,re:187,rk:'T',body:'Hatchback',seats:5,dc:35,dce:1,ac:3.3,wr:'15 yr / unlimited km for first owner (24 kWh)',ncap:'',conf:'m',
  baas:{type:'B',own:6.99,price:4.69,perKm:2.6,basis:1320,variant:'19.2 kWh'},
  note:'Cheapest proper 4-door EV from a big brand. The test was on the older 275 km version. No Bharat NCAP score found for the new generation.'},
@@ -295,7 +316,7 @@ var CARS = [
 {id:'punch',src:'https://www.autocarindia.com/auto-features/2026-tata-punch-ev-real-world-range-tested-explained-440983',br:'Tata',nm:'Punch EV',bat:40,bats:'30 / 40',p:[9.79,12.99],cl:468,re:304,rk:'T',body:'Compact SUV',seats:5,dc:32,meas:1,m:[27,31,180],ac:7.2,wr:'15 yr / unlimited km for first owner (40 kWh)',ncap:'5★ Bharat NCAP (adult 31.09/32, child 45/49)',conf:'m',pick:'compact',
  baas:{type:'B',own:9.79,price:6.59,perKm:2.6,basis:1800,variant:'30 kWh'},
  note:'The 468 km claim is on the old cycle; some sites list 355 km. Charging time of 26 minutes is as listed by one site and other sources differ, so treat it as approximate.'},
-{id:'nexon',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Nexon EV',bat:45,bats:'30 / 45',p:[12.49,17.89],cl:489,re:350,rk:'T',body:'Compact SUV',seats:5,dc:60,ac:7.2,wr:'15 yr / unlimited km for first owner (45 kWh)',ncap:'Tested by Bharat NCAP',conf:'h',
+{id:'nexon',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Nexon EV',bat:45,bats:'30 / 45',p:[12.49,17.89],cl:489,re:350,rk:'T',body:'Compact SUV',seats:5,dc:60,ac:7.2,wr:'15 yr / unlimited km for first owner (45 kWh)',ncap:'5★ Bharat NCAP (adult 29.86/32, child 44.95/49)',conf:'h',
  baas:{type:'B',own:14.34,price:8.99,perKm:4.4,basis:1800,variant:'45 kWh'},
  note:'Bigger cabin and better highway range than the Punch. A safe all-rounder.'},
 {id:'xuv3xo',br:'Mahindra',nm:'XUV 3XO EV',bat:39.4,bats:'39.4',p:[13.89,14.96],cl:351,re:270,rk:'E',body:'Compact SUV',seats:5,dc:45,dce:1,ac:7.2,wr:'Not stated',ncap:'',conf:'l',
@@ -319,13 +340,13 @@ var CARS = [
 {id:'zs',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'MG',nm:'ZS EV',bat:50.3,bats:'50.3',p:[17.99,20.75],cl:461,re:339,rk:'T',body:'SUV',seats:5,dc:50,dce:1,ac:7.4,wr:'8 yr / 1.5 lakh km',ncap:'',conf:'h',
  baas:{type:'A',own:17.99,price:13.00,perKm:4.5,minKm:1500,variant:'ZS EV'},
  note:'AC charging takes about 9 hours. A fine car, though newer rivals test further.'},
-{id:'curvv',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Curvv EV',bat:55,bats:'45 / 55',p:[17.19,19.69],cl:502,re:365,rk:'T',body:'SUV coupe',seats:5,dc:40,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'Tested by Bharat NCAP',conf:'h',
+{id:'curvv',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Curvv EV',bat:55,bats:'45 / 55',p:[17.19,19.69],cl:502,re:365,rk:'T',body:'SUV coupe',seats:5,dc:40,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'5★ Bharat NCAP (adult 30.81/32, child 44.83/49)',conf:'h',
  baas:{type:'B',own:17.19,price:10.99,perKm:5.0,basis:1800,variant:'55 kWh'},
  note:'Older stock may carry large discounts that end on 15 Nov 2026 (up to ₹3.35 lakh).'},
 {id:'vf6',br:'VinFast',nm:'VF6',bat:59.6,bats:'59.6',p:[18.19,20.09],cl:465,re:370,rk:'E',body:'SUV',seats:5,dc:25,ac:11,wr:'Not stated',ncap:'No Bharat NCAP score found',conf:'l',
  note:'Quick DC charging claimed. The brand is new in India, so check service reach near you.'},
 /* ---------- 60 to 80 kWh : long range ---------- */
-{id:'evitara',br:'Maruti Suzuki',nm:'e Vitara',bat:61,bats:'49 / 61',p:[16.19,20.21],cl:543,re:370,rk:'E',body:'SUV',seats:5,dc:45,ac:11,wr:'8 yr / 1.6 lakh km (secondary source)',ncap:'5★ Bharat NCAP (adult 31.49/32)',conf:'m',
+{id:'evitara',br:'Maruti Suzuki',nm:'e Vitara',bat:61,bats:'49 / 61',p:[16.19,20.21],cl:543,re:370,rk:'E',body:'SUV',seats:5,dc:45,ac:11,wr:'8 yr / 1.6 lakh km (secondary source)',ncap:'5★ Bharat NCAP (adult 31.49/32, child 43/49)',conf:'m',
  baas:{type:'B',own:16.19,price:10.99,perKm:3.99,basis:1800,variant:'49 kWh (61 kWh is ₹4.39/km)'},
  note:'A reader-supplied guide quotes 338 km in the city and 403 km on the highway. That is not an independent test, so 370 km is shown as an estimate. Widest service reach of any brand. Assured buyback up to 60% after 3 years / 45,000 km.'},
 {id:'ebella',br:'Toyota',nm:'Urban Cruiser Ebella',bat:61,bats:'49 / 61',p:[23.60,23.60],cl:543,re:402,rk:'E',body:'SUV',seats:5,dc:41,meas:1,m:[35,36,90],ac:11,wr:'Not stated',ncap:'',conf:'m',
@@ -338,13 +359,13 @@ var CARS = [
 {id:'sierra',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Sierra EV',bat:75,bats:'63 / 75',p:[18.79,25.99],cl:624,re:438,rk:'T',body:'SUV',seats:5,dc:40,dce:1,ac:7.2,wr:'15 yr / unlimited km; next owner gets 10 yr / 2 lakh km',ncap:'',conf:'m',pick:'longalt',
  baas:{type:'B',own:18.79,price:11.99,perKm:5.5,basis:1800,variant:'63 kWh'},
  note:'438 km was tested on the AWD version. Strong challenger to the Mahindras. Compare ride and refinement before you book.'},
-{id:'harrier',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Harrier EV',bat:75,bats:'65 / 75',p:[21.79,29.29],cl:622,re:401,rk:'T',body:'SUV',seats:5,dc:25,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'5★ Bharat NCAP (adult 32/32)',conf:'m',
+{id:'harrier',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Harrier EV',bat:75,bats:'65 / 75',p:[21.79,29.29],cl:622,re:401,rk:'T',body:'SUV',seats:5,dc:25,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'m',
  baas:{type:'B',own:21.79,price:14.49,perKm:5.9,basis:1800,variant:'65 kWh'},
  note:'AWD and 120 kW charging. The AWD version tested 401 km and used the most energy of the EVs tested (5.35 km/kWh).'},
-{id:'be6',br:'Mahindra',nm:'BE 6 Sporteq',bat:79,bats:'59 / 70 / 79',p:[19.45,27.70],cl:683,re:449,rk:'T',body:'SUV coupe',seats:5,dc:38,meas:1,m:[33,35,150],ac:11.2,wr:'Lifetime for first private owner',ncap:'Tested by Bharat NCAP',conf:'m',
+{id:'be6',br:'Mahindra',nm:'BE 6 Sporteq',bat:79,bats:'59 / 70 / 79',p:[19.45,27.70],cl:683,re:449,rk:'T',body:'SUV coupe',seats:5,dc:38,meas:1,m:[33,35,150],ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 31.97/32, child 45/49)',conf:'m',
  baas:{type:'B',own:19.45,price:11.45,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'449 km comes from a test of the regular BE 6 79 kWh, not the Sporteq. Charges at up to 180 kW.'},
-{id:'xev9e',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9e-real-world-range-tested-explained-436045',br:'Mahindra',nm:'XEV 9e',bat:79,bats:'59 / 79',p:[21.90,31.25],cl:656,re:456,rk:'T',body:'SUV coupe',seats:5,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 32/32, a perfect score)',conf:'h',pick:'long5',
+{id:'xev9e',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9e-real-world-range-tested-explained-436045',br:'Mahindra',nm:'XEV 9e',bat:79,bats:'59 / 79',p:[21.90,31.25],cl:656,re:456,rk:'T',body:'SUV coupe',seats:5,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'h',pick:'long5',
  baas:{type:'B',own:21.90,price:13.90,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'Great ride, big boot, 180 kW charging. The 20-minute fast-charge time is the maker’s figure: the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger in Autocar’s test. The touchscreen software is complex but Autocar says updates fixed earlier bugs. Owners report waits of about 4 months for top variants.'},
 {id:'xev9s',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9s-real-world-range-tested-explained-440015',br:'Mahindra',nm:'XEV 9S',bat:79,bats:'59 / 70 / 79',p:[20.65,30.90],cl:679,re:478,rk:'T',body:'SUV',seats:7,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'',conf:'m',pick:'long7',
@@ -413,7 +434,7 @@ var PICKS = [
  {key:'compact',band:'Compact',rng:'30 to 45 kWh · ₹10-15 L',id:'punch',alt:[['nexon','More range and a bigger cabin for highway use']],
   why:'5-star Bharat NCAP, lifetime-style battery warranty, handy size and ground clearance. Good value in this class.'},
  {key:'family',band:'Family',rng:'45 to 60 kWh · ₹15-25 L',id:'creta',alt:[['evitara','5 stars and the widest service reach'],['windsorpro','Most rear-seat space under ₹20 L'],['syros','Strong build; test-drive it. No independent range test yet']],
-  why:'Best tested range under ₹25 lakh (432 km) and the best efficiency in its class. Big service network and good resale. Caveat: battery cover is 8 years, where Tata and Mahindra give lifetime cover.'},
+  why:'Best tested range among 45-60 kWh cars (432 km) and the best efficiency in its class. Big service network and good resale. Caveat: battery cover is 8 years, where Tata and Mahindra give lifetime cover.'},
  {key:'long',band:'Long range',rng:'60 to 80 kWh · ₹20-32 L',id:'xev9e',id2:'xev9s',alt:[['sierra','Strong challenger, tested 438 km on AWD'],['hector','446 km tested at a lower price']],
   why:'XEV 9S went furthest of any mass-market EV tested (478 km). XEV 9e scored a perfect 32/32 for adult safety. Both charge at up to 180 kW and carry a lifetime battery warranty for the first owner. Pick the 9e for five seats, the 9S for six or seven.'},
  {key:'premium',band:'Premium',rng:'₹40-80 L',id:'ioniq5',alt:[['modely','Best charging network, but Tesla-only and few service points'],['seal','Best-value electric sedan'],['cla','Most efficient premium EV tested (about 580 km)']],
@@ -424,13 +445,13 @@ var PICKS = [
 
 /* Upcoming launches (dates are tentative) */
 var UPCOMING = [
- ['Denza D9 MPV / Z9 GT (BYD luxury brand)','13 Nov 2026','₹85 L - 1.5 Cr'],
- ['Mahindra Thar E','15 Nov 2026 (tentative)','about ₹25 L'],
- ['JSW Chery iCar V23 / Jaecoo J5 EV','15 Nov 2026','₹17-25 L'],
- ['VinFast VF3 / VF5','Late Nov 2026 (no date confirmed)','₹7.5-12 L'],
- ['Mini Cooper SE','27 Nov 2026','about ₹50 L'],
- ['Honda Alpha','Global premiere 2 Dec 2026','about ₹20 L'],
- ['Tata Safari EV','Dec 2026','₹23-32 L']
+ ['Denza D9 MPV and Z9 GT (BYD luxury brand)','13 Nov 2026','₹80 L to ₹1.5 Cr'],
+ ['VinFast VF3','Late Nov 2026, no official date','₹7.5-12 L'],
+ ['Mini Cooper SE','27 Nov 2026','₹55-65 L'],
+ ['Honda 0 Alpha (India name not final)','Production model shown 2 Dec 2026. Sale date not announced','about ₹16-20 L'],
+ ['Tata Safari EV','Was planned for the 2026 festive season. No date announced yet','₹22.5-30 L'],
+ ['Mahindra Thar e','Sites disagree: 15 Nov 2026 or 2027. Not confirmed','₹22-30 L'],
+ ['JSW Chery iCar V23 SUV','Sites disagree: 15 Nov 2026 or 2027. Not confirmed','under ₹20 L']
 ];
 
 /* Road tax / incentives by state (as researched, Nov 2026) */
@@ -447,15 +468,15 @@ var STATES = [
 
 /* Safety results found (Bharat NCAP unless stated) */
 var SAFETY = [
- ['Mahindra XEV 9e','Adult 32/32 (perfect)','5★'],
- ['Tata Harrier EV','Adult 32/32','5★'],
- ['Maruti Suzuki e Vitara','Adult 31.49/32','5★'],
+ ['Mahindra XEV 9e','Adult 32/32, child 45/49','5★'],
+ ['Tata Harrier EV','Adult 32/32, child 45/49','5★'],
+ ['Mahindra BE 6','Adult 31.97/32, child 45/49','5★'],
  ['Tata Punch EV (2026)','Adult 31.09/32, child 45/49','5★'],
- ['Tata Nexon EV','Tested','Rated'],
- ['Tata Curvv EV','Tested','Rated'],
- ['Mahindra BE 6','Tested','Rated'],
+ ['Maruti Suzuki e Vitara','Adult 31.49/32, child 43/49','5★'],
+ ['Tata Curvv EV','Adult 30.81/32, child 44.83/49','5★'],
+ ['Tata Nexon EV','Adult 29.86/32, child 44.95/49','5★'],
  ['BYD Atto 3','Euro NCAP (not Bharat NCAP)','5★ Euro'],
- ['Hyundai Creta Electric, new Tiago EV, MG Windsor, BYD and VinFast cars','No Bharat NCAP result found','None found']
+ ['Hyundai Creta Electric, Tiago EV, MG Windsor, VinFast cars and others','No Bharat NCAP result found','None found']
 ];
 
 /* ===== Map data. Coordinates are lat/lon. Notes come only from the sources read in Nov 2026. =====
@@ -540,7 +561,7 @@ var NETWORKS = [
  ['GLIDA (formerly Fortum)','Established DC fast charging. Seen in Vadodara, Ahmedabad and Rajkot.','DC'],
  ['Shell Recharge, Adani Total, Zeon','Expanding city and highway networks.','Mixed'],
  ['HPCL, BPCL, IOCL pumps','Government oil companies host chargers at fuel stations (seen in Vadodara, Surat, Rajkot).','Mixed'],
- ['Tesla Supercharger','About 20 Superchargers and 14 destination chargers in Mumbai, Delhi, Gurugram and Navi Mumbai (Apr 2026). Only Tesla owners can use them. ₹24 per kWh (Supercharger), ₹14 per kWh (11 kW destination).','DC, owners only'],
+ ['Tesla Supercharger','Five Supercharger sites (about 20 plugs) and 14 destination chargers in Mumbai, Navi Mumbai, Delhi and Gurugram (Apr 2026). Only Tesla owners can use them. ₹24 per kWh (Supercharger), ₹14 per kWh (11 kW destination).','DC, owners only'],
  ['Ather Grid, Bolt.Earth, Ola','Mainly for scooters and bikes. Low-power. Not useful for cars.','Two-wheelers'],
  ['PlugShare, Google Maps','Not networks. Maps that show most chargers, with recent check-ins from drivers.','Maps']
 ];
@@ -718,12 +739,12 @@ function scoreCar(c,need){ // need: budget, seats, dailyKm, tripsPerMonth
   var chg=c.dc? Math.max(0,Math.min(1,(70-c.dc)/50)) : 0;
   var wChg = need.trips>0 ? 0.14 : 0.06;
   var s=0.30*rangeS+0.18*eff+0.14*value+0.14*safety+0.10*wr+wChg*chg;
-  var why=[]; if (c.re>=must*1.15) why.push('Tested range of '+c.re+' km covers your driving with room to spare');
-  else if (c.re>=must) why.push('Tested range of '+c.re+' km just covers your needs');
-  else why.push('Tested range of '+c.re+' km is short for your trips. Plan charging stops');
+  var rw=c.rk==='T'?'Tested':'Estimated', why=[]; if (c.re>=must*1.15) why.push(rw+' range of '+c.re+' km covers your driving with room to spare');
+  else if (c.re>=must) why.push(rw+' range of '+c.re+' km just covers your needs');
+  else why.push(rw+' range of '+c.re+' km is short for your trips. Plan charging stops');
   if (/5★/.test(c.ncap)) why.push('5-star crash rating'); if (/Lifetime|15 yr/.test(c.wr)) why.push('Long battery warranty');
   if (eff>0.78) why.push('Very efficient ('+(c.re/c.bat).toFixed(1)+' km per kWh)');
-  if (c.dc && c.dc<=25) why.push('Fast DC charging (about '+c.dc+' min for 10-80%)');
+  if (c.dc && c.dc<=25) why.push('Fast DC charging ('+(c.meas?'measured':c.dce?'class estimate':'maker figure')+': about '+c.dc+' min for 10-80%)');
   return {car:c, score:s, why:why, short:c.re<must};
 }
 
@@ -811,10 +832,10 @@ var ICONS={
 var GLOSS=[
 ['Battery','kWh (kilowatt-hour)','The size of the battery. Think of it as the fuel tank in litres. A 50 kWh battery holds about twice as much energy as a 25 kWh one. Most tested cars here use roughly 5 to 11 km of range per kWh.'],
 ['Charging','kW (kilowatt)','The speed of energy flow. Think of the tap or the pump nozzle. Higher kW fills the tank faster. Rule of thumb: hours to fill = kWh ÷ kW. A 50 kWh battery on a 7 kW charger needs about 7 hours (a bit more with losses).'],
-['Battery','Gross vs usable capacity','Gross is the total the battery can hold. Usable is what the car lets you use, keeping a safety buffer at both ends. Brands quote them differently. For example, the Tesla Model Y is listed as about 64 kWh gross but 60 kWh usable. Always ask which one a number means.'],
+['Battery','Gross vs usable capacity','Gross is the total the battery can hold. Usable is what the car lets you use, keeping a safety buffer at both ends. Brands quote them differently. For example, a pack sold as 64 kWh may give 60 kWh usable. Always ask which one a number means.'],
 ['Battery','Range (claimed)','The distance the maker says a full battery covers, from a lab test. In India it is usually the ARAI or MIDC figure. Imported cars often quote the WLTP figure. You will almost never get this number in daily use.'],
 ['Battery','Range (real-world)','What independent testers measure on real roads with traffic and highway speeds. In this guide it is mostly 65% to 90% of the claim. Plan with this number, not the brochure.'],
-['Driving','Efficiency (km per kWh)','Like km per litre. Higher is better. The best tested here is the MG Comet at 11.17 km/kWh. The Creta Electric gets 8.4. A heavy SUV like the Harrier EV AWD gets 5.35. A smaller battery in an efficient car can beat a bigger battery in a heavy one.'],
+['Driving','Efficiency (km per kWh)','Like km per litre. Higher is better. The best tested here is the MG Comet at about 11 km/kWh. The Creta Electric gets 8.4. A heavy SUV like the Harrier EV AWD gets 5.35. A smaller battery in an efficient car can beat a bigger battery in a heavy one.'],
 ['Battery','SoC (state of charge)','The fuel gauge in percent. 80% means the battery is four-fifths full.'],
 ['Battery','SoH (state of health)','How much capacity the battery still has compared with new. 100% is brand new. Tata’s warranty promises repair or replacement if it falls below 70% during the cover period. A 50 kWh pack at 80% SoH holds about 40 kWh.'],
 ['Battery','Degradation','The slow, normal loss of battery capacity over the years. Heat, frequent fast charging, and sitting at 100% or near 0% for long all speed it up.'],
@@ -827,7 +848,7 @@ var GLOSS=[
 ['Charging','AC charging','Alternating current from the wall. The car’s own onboard charger converts it to battery power. Slower, gentle, and what you use at home and at many public points.'],
 ['Charging','DC fast charging','The charger converts the power itself and feeds the battery directly, so it can be much faster. Used on highways. Costs more per unit.'],
 ['Charging','Onboard charger (OBC)','The converter inside the car that limits how fast AC charging can go. Most Indian EVs top out at 7.2 kW or 11 kW, so a 22 kW public AC point will not charge them any faster.'],
-['Charging','Charging curve and taper','Fast charging is quick up to about 80%, then slows a lot to protect the battery. One guide notes that the last 20% takes nearly as long as the first 80%. This is why people stop at 80% on trips.'],
+['Charging','Charging curve and taper','Fast charging is quick up to about 80%, then slows a lot to protect the battery. In Autocar India’s tests, the last 20% (80 to 100%) took 30 to 36 minutes on most cars, about as long as the 60% before it. This is why people stop at 80% on trips.'],
 ['Charging','10-80% time','The number to compare when buying. It tells you how long a typical highway stop takes. Be careful: some brands quote 20-80%, which is shorter.'],
 ['Charging','Peak vs average speed','A car may hit 150 kW for a moment but average only 90 kW across the stop. Look at measured 10-80% times, not the peak.'],
 ['Charging','400V and 800V','The battery’s system voltage. 800V cars (such as the Ioniq 5 and Mercedes GLC Electric) can hold very fast charging speeds for longer, if the charger is powerful enough.'],
@@ -899,7 +920,7 @@ function viewLearn(){
    ['How to know','Ask the dealer and read the manual','Same: ask for the chemistry and the daily charge limit in writing']].map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>';}).join('')+'</tbody></table></div></section>'+
 
   /* km left */
-  '<section class="sec" id="learn-left">'+secHead('','Reading the meter','How many km do I have left?','Your car works this out itself. Knowing how helps you judge when to believe it.')+
+  '<section class="sec" id="learn-left">'+secHead('','Step 5 · Reading the meter','How many km do I have left?','Your car works this out itself. Knowing how helps you judge when to believe it.')+
   '<div class="cols2 lop"><div class="card stack">'+
   '<h3>The car’s guess</h3>'+
   '<p class="small" style="margin:0">The car takes the battery percentage, turns it into kWh, and multiplies by your recent km per kWh (usually your last 20 to 50 km). Some cars also count the AC and outside temperature. So the number is a guess based on how you have been driving.</p>'+
@@ -916,13 +937,13 @@ function viewLearn(){
   '<p class="small muted" style="margin:0" id="lf-txt"></p></div></div></section>'+
 
   /* range */
-  '<section class="sec" id="learn-range">'+secHead('','Step 5 · Range','Claimed vs real range','Light bar is the maker’s claim. Dark bar is what independent tests measured. Hover or tap a bar for details.')+
+  '<section class="sec" id="learn-range">'+secHead('','Step 6 · Range','Claimed vs real range','Light bar is the maker’s claim. Dark bar is what independent tests measured. Hover or tap a bar for details.')+
   '<div class="card">'+chart+'<div class="legend" style="margin-top:8px"><span><i style="background:var(--s1-soft)"></i>Claimed (ARAI / MIDC)</span><span><i style="background:var(--s1)"></i>Tested on real roads</span></div></div>'+
   '<div class="cols2" style="margin-top:14px"><div class="note info"><span class="lbl">Simple rule</span><p>Plan with about 65% to 90% of the claimed range. Efficient cars like the Creta Electric and MG Windsor came close to their claims. Big SUVs fell further short.</p></div>'+
   '<div class="note warn"><span class="lbl">Stops are shorter than range</span><p>You rarely drive from 100% to 0%. If you charge between 20% and 80%, the distance between stops is about 60% of the full range. Always keep a buffer.</p></div></div></section>'+
 
   /* driving */
-  '<section class="sec" id="learn-drive">'+secHead('','Step 6 · On the road','Driving your first EV','What feels different in the first week.')+
+  '<section class="sec" id="learn-drive">'+secHead('','Step 7 · On the road','Driving your first EV','What feels different in the first week.')+
   '<div class="grid">'+[
    ['It is quiet and quick','Full pulling power from zero. Pull out of junctions smoothly and without a gearbox jerk. Watch your speed in the city because it builds up quietly.'],
    ['Try one-pedal driving','Set regen to the stronger setting and let the accelerator do the braking. Keep your foot ready for the real brake pedal.'],
@@ -933,7 +954,7 @@ function viewLearn(){
   ].map(function(x){return '<div class="card flat"><h4>'+x[0]+'</h4><p class="small muted" style="margin-top:6px">'+x[1]+'</p></div>';}).join('')+'</div></section>'+
 
   /* care */
-  '<section class="sec" id="learn-care">'+secHead('','Step 7 · Habits','Looking after the battery','The battery is the costly part. These habits are free. Battery life is commonly 8 to 15 years, and warranties are now long: 8 years or 1.6 lakh km at most brands; lifetime cover for the first owner on some Tata, Mahindra and MG models, with conditions.')+
+  '<section class="sec" id="learn-care">'+secHead('','Step 8 · Habits','Looking after the battery','The battery is the costly part. These habits are free. Battery life is commonly 8 to 15 years, and warranties are now long: 8 years or 1.6 lakh km at most brands; lifetime cover for the first owner on some Tata, Mahindra and MG models, with conditions.')+
   '<div class="cols2"><div class="card"><h3 style="color:var(--good)">Do</h3><ul>'+
    ['Plug in at home when it suits you. You do not need to wait for it to run low.','Follow the daily charge limit in your owner’s manual. Charge to 100% only before a long trip, and leave soon after.','Park in shade in summer. Heat ages a battery faster than anything else.','Use fast chargers for trips. Occasional fast charging is normal.','Keep software updated and go to the authorised service centre for the yearly high-voltage check.','Use branded, certified cables and chargers only.'].map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></div>'+
   '<div class="card"><h3 style="color:var(--bad)">Avoid</h3><ul>'+
@@ -941,7 +962,7 @@ function viewLearn(){
   '<div class="note warn" style="margin-top:14px"><span class="lbl">Read your warranty</span><p>Lifetime warranties have conditions: usually the first private owner only, with servicing at authorised centres. Tata’s “lifetime” means 15 years from first registration with a minimum 70% battery health. Get the exact wording in writing.</p></div></section>'+
 
   /* myths */
-  '<section class="sec" id="learn-myths">'+secHead('','Step 8 · Straight talk','Myths and facts','')+
+  '<section class="sec" id="learn-myths">'+secHead('','Step 9 · Straight talk','Myths and facts','')+
   '<div class="card flat" style="padding:4px 16px">'+[
    ['“EVs cannot do highways.”','The best tested cars run 450 to 500 km on real roads (XEV 9S 478 km, Ioniq 5 501 km). Roughly 91% of national highways have a charger about every 50 km, though coverage is uneven. Rajasthan, the hills and some east-coast stretches are thin. Check the Map tab and plan.'],
    ['“The battery will die in 3-4 years.”','Warranties of 8 years / 1.6 lakh km are standard, and some brands offer lifetime cover for the first owner. Typical life is 8 to 15 years. Batteries age slowly, and what you lose is range, not the car.'],
@@ -1010,7 +1031,7 @@ function bindLearn(){
 
 /* ===== CARS tab ===== */
 var CS={tariff:8, cmp:[], fav:[], favOnly:false, open:{}, classes:[], body:'all', seats:'any', sort:'price', q:'', budgetIdx:15};
-function loadCarState(){ ['cmp','fav'].forEach(function(k){ var v=store(k); CS[k]=Array.isArray(v)?v.filter(function(id){return typeof id==='string'&&carById(id);}).slice(0,k==='cmp'?3:200):[]; }); }
+function loadCarState(){ ['cmp','fav'].forEach(function(k){ var v=store(k); CS[k]=Array.isArray(v)?v.filter(function(id,i,a){return typeof id==='string'&&carById(id)&&a.indexOf(id)===i;}).slice(0,k==='cmp'?3:200):[]; }); }
 loadCarState();
 var BUDGETS=[8,10,12,15,18,20,25,30,40,50,60,80,100,150,300,1000];
 var BODYGROUP={all:'All body types',small:'Small and hatchback',sedan:'Sedan and coupe',suv:'SUV and crossover',mpv:'MPV and 7-seat'};
@@ -1179,8 +1200,9 @@ function viewCharging(){
    ['Public AC','Type 2 · 7.4-22 kW','At offices, malls, hotels and societies. Your car’s onboard charger sets the limit, so a 22 kW point is not faster for a car that accepts 7.4 or 11 kW.','At 11 kW about '+kmhAdded(11)+' km per hour. Good while you shop or work.','Prices vary by operator. Check the app before you plug in.'],
    ['DC fast','CCS2 · 30-360 kW','Highway and city fast chargers. The charger feeds the battery directly. Speed depends on both the charger and the car.','Autocar India measured 20-80% in 16 to 38 minutes on cars with a 40-85 kWh battery, using 90-360 kW chargers.','Costs more per unit than home. Use it for trips, not daily top-ups.']
   ];
-  var ladder=[['3.3 kW socket',3.3],['7.4 kW wallbox',7.4],['11 kW public AC',11],['60 kW DC',60],['120 kW DC',120],['240 kW DC',240]].map(function(l){var kmh=kmhAdded(l[1]); var cap=l[1]>=60;
-    return '<div class="r"><span>'+l[0]+'</span><div class="bar" data-tip="<b>'+l[0]+'</b><br>Up to about '+kmh+' km of range per hour'+(cap?'<br>Your car’s own limit may be lower':'')+'"><i style="width:'+Math.min(100,kmh/1500*100)+'%"></i></div><span class="num">'+kmh+' km/h'+(cap?'*':'')+'</span></div>';}).join('');
+  var ladder=[['3.3 kW socket',3.3],['7.4 kW wallbox',7.4],['11 kW public AC',11]].map(function(l){var kmh=kmhAdded(l[1]);
+    return '<div class="r"><span>'+l[0]+'</span><div class="bar" data-tip="<b>'+l[0]+'</b><br>Up to about '+kmh+' km of range per hour<br>Your car’s own AC limit may be lower"><i style="width:'+Math.min(100,kmh/70*100)+'%"></i></div><span class="num">'+kmh+' km/h</span></div>';}).join('');
+  var dcAvg=CARS.filter(function(c){return c.m;}).map(function(c){return 0.6*c.bat/(c.m[0]/60);}), dcLo=Math.min.apply(null,dcAvg), dcHi=Math.max.apply(null,dcAvg), per100=function(kw){return Math.round(100/KPK/kw*60);};
   return ''+
   '<div class="intro"><div><div class="kicker">Plugs, speeds, costs, and where to charge</div><h1>Charging, explained</h1></div>'+
   '<p class="lead">You will charge at home most days. Fast chargers are for highway trips. Here is every kind of charger, what each costs, and how to plan.</p></div>'+
@@ -1188,7 +1210,7 @@ function viewCharging(){
 
   '<section class="sec" id="ch-ways">'+secHead('','Four ways','Four ways to charge a car','')+
   '<div class="grid g4">'+ways.map(function(w){return '<div class="card stack"><div><h3>'+w[0]+'</h3><div class="num small muted" style="margin-top:3px">'+w[1]+'</div></div><p class="small" style="margin:0">'+w[2]+'</p><div class="tinted small"><b>Speed:</b> '+w[3]+'</div><p class="small muted" style="margin:0">'+w[4]+'</p></div>';}).join('')+'</div>'+
-  '<div class="card" style="margin-top:14px"><h4 style="margin-bottom:10px">Range added in one hour, at best</h4><div class="ladder">'+ladder+'</div><p class="tiny muted" style="margin:10px 0 0">Estimate: kW × 0.9 × '+KPK+' km per kWh (the middle of independently tested cars). *Real fast charging is capped by the car and slows down near the top.</p></div></section>'+
+  '<div class="card" style="margin-top:14px"><h4 style="margin-bottom:10px">Range added in one hour on slower chargers</h4><div class="ladder">'+ladder+'</div><p class="tiny muted" style="margin:10px 0 0">Estimate: kW × 0.9 × '+KPK+' km per kWh (the middle of independently tested cars).</p><div class="tinted small" style="margin-top:12px"><b>Fast chargers (DC) work differently.</b> In Autocar India’s tests the cars averaged '+Math.round(dcLo)+' to '+Math.round(dcHi)+' kW between 20% and 80%. At that pace, 100 km of range takes about '+per100(dcHi)+' to '+per100(dcLo)+' minutes. The charger slows down near the top.</div></div></section>'+
 
   '<section class="sec" id="ch-plug">'+secHead('','The plug','Plugs and sockets','Good news: almost every EV on sale in India uses one shape. The port on the car takes both slow and fast charging. Pictures are simplified schematics.')+
   '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">'+[
@@ -1235,14 +1257,14 @@ function viewCharging(){
    ['Watch the first minute','The charger should ramp up. If the speed stays far below what you expected, try another gun or stall. Heat, cold or a shared charger can cut speed.'],
    ['Stop at about 80%','On a trip, leave at 80%. The last 20% is slow. Time your meal or rest stop around the charge.'],
    ['Stop, unplug and move','End the session in the app, wait for the lock to release, then unplug. Move the car so others can charge. Some stations add an idle or parking fee if you stay.'],
-   ['Carry a safety kit','Keep payment ready in more than one app, and know where the next charger is. Plan to arrive with at least 10-20% left, more if the next charger is far away. Never run the car down to single digits.']
+   ['Have a backup plan','Keep payment ready in more than one app, and know where the next charger is. Plan to arrive with at least 10-20% left, more if the next charger is far away. Never run the car down to single digits.']
   ].map(function(s,i){return '<li><div class="stone" aria-hidden="true"><i></i><b>'+(i+1)+'</b></div><div><h4>'+s[0]+'</h4><p class="small muted" style="margin:3px 0 0">'+s[1]+'</p></div></li>';}).join('')+'</ol></section>'+
 
   '<section class="sec" id="ch-cost">'+secHead('','Money','What charging costs','Prices change often and differ by operator and city. These are the figures I could source. Check the app for the price at the plug.')+
   '<div class="cols2 lop"><div class="tbl"><table><thead><tr><th>Where</th><th class="r">₹ per unit (kWh)</th></tr></thead><tbody>'+
    [['Home','Your electricity bill rate. This app uses ₹8 as an example.'],['Public DC fast','₹15-25 or more (one review guide)'],['Tesla Supercharger (Tesla owners only)','₹24'],['Tesla destination charger, 11 kW (Tesla owners only)','₹14'],['Public AC','Varies by operator. Check the app.']].map(function(r){return '<tr><td>'+r[0]+'</td><td class="r small">'+r[1]+'</td></tr>';}).join('')+'</tbody></table></div>'+
   '<div class="card">'+costChart()+'</div></div>'+
-  '<p class="small muted" style="margin-top:10px">About 10% of the electricity you pay for is lost as heat while charging, and the cost figures include that. Example: a 40 kWh car doing '+KPK+' km per kWh needs about 6.2 kWh from the wall for every 40 km, which is about ₹50 at ₹8 per unit.</p></section>'+
+  '<p class="small muted" style="margin-top:10px">About 10% of the electricity you pay for is lost as heat while charging, and the cost figures include that. Example: a 40 kWh car doing '+KPK+' km per kWh needs about 6.8 kWh from the wall for every 40 km, which is about ₹55 at ₹8 per unit.</p></section>'+
 
   '<section class="sec" id="ch-apps">'+secHead('','Who runs the chargers','Apps and networks','Charger counts below are not exact. Official figures: 27,737 stations installed and 22,753 working in March 2026, and 4,874 more chargers approved in July 2026. Other trackers count more (up to about 52,700) because they count differently.')+
   '<div class="tbl"><table><thead><tr><th>Network</th><th>What the sources say</th><th>Type</th></tr></thead><tbody>'+NETWORKS.map(function(n){return '<tr><td><b>'+n[0]+'</b></td><td>'+n[1]+'</td><td>'+n[2]+'</td></tr>';}).join('')+'</tbody></table></div></section>';
@@ -1386,7 +1408,7 @@ function viewMap(){
   '<div class="grid">'+[
    ['27,737','public charging stations installed (March 2026)'],
    ['22,753','of them working (about 82%)'],
-   ['1 per 235','electric vehicles, in station terms'],
+   ['235 EVs','for every public charging station, on average'],
    ['91%','of national highway stretches have a charger about every 50 km, say officials'],
    ['4,874','more chargers approved in July 2026'],
    ['PM E-DRIVE','the central scheme paying for more public chargers']
@@ -1517,7 +1539,7 @@ function viewMoney(){
   '<div class="grid">'+[
    ['Insurance','Often 3-4% of the price each year. Higher for costly cars. Ask for a quote with “battery cover” included.'],
    ['Servicing','Lower than petrol: no engine oil, fewer parts. Budget for tyres, brakes, coolant and cabin filter.'],
-   ['Home charger','₹5-15 k for installation. A wallbox adds ₹40-75 k.'],
+   ['Home charger','A one-time cost for the wallbox, wiring and a proper breaker. Get a written quote that includes installation and testing.'],
    ['Tyres','EVs are heavy and quick. Tyres can wear faster, so check the cost.'],
    ['Battery warranty','Most brands give 8 years or 1.6 lakh km on the battery. Read what counts as “healthy”.'],
    ['Resale','EV resale values are still settling. A used EV is often a bargain, but you should check the battery health report.']
@@ -1568,7 +1590,7 @@ var CHECKS={
  dealer:['Get the full on-road price in writing: car, battery, charger, installation, insurance and road tax, each on its own line.','Ask whether the low advertised price is a battery rental (BaaS) price or a battery-included price.','Confirm the exact variant: battery size, motor, wheels. Range and price differ by variant.','Ask for the independent test range of that exact variant, and what range you should expect on the highway with the AC on.','Ask for the battery warranty in writing: years, km, who it covers (first owner only?), and what battery health counts as a fault.','Ask for the 10-80% fast-charge time and the AC charging limit in kW.','Is a portable charger included? A wallbox? A Type 2 cable? Who installs it?','Where is the nearest authorised high-voltage service centre? How long are the waits? What is the towing arrangement?','Ask for a dated, written explanation of road-tax and subsidy eligibility in your state.','If you choose battery rental: ask for the rate, any monthly minimum, how long the loan runs, and what happens to it when you sell.','Ask about software updates and any known issues.','Is there a buyback or resale plan? Get the terms on paper.','Compare against a petrol car with similar features, not a cheaper trim.','Get an insurance quote and check that the battery is covered.'],
  drive:['Test the exact variant you plan to buy.','Sit in every seat. Check head room, leg room and the back seat.','Put your real luggage in the boot. Check for a spare tyre or repair kit.','Drive on a bad road to check suspension, noise and ground clearance.','Try the regeneration (slow-down) modes. Do they feel natural?','Try the brakes at city speed. EV brakes feel different at first.','Drive at your normal highway speed with the AC on. Check the efficiency (km per kWh) on the display.','Use the touchscreen while driving. Are the basics easy to reach?','Check where the charge port is against your parking spot.','Try the phone app: lock, climate, charging schedule.','Ask to see the charging cable and how the port lid opens.','If you can, drive it again on another day.'],
  home:['Ask a qualified electrician to inspect the supply, the distribution board and the cable route.','Check your sanctioned load and whether your electricity company needs to upgrade it.','Plan a dedicated circuit for the charger. No shared socket strips or extension reels.','Get the wire thickness and breakers sized for the charger and the cable length.','Get earthing tested and written down.','Fit the right overcurrent and earth-leakage (RCD) protection.','Use a weatherproof enclosure if outdoors. Protect the cable from being crushed or stretched.','Ask for tests of tripping, polarity, voltage drop and heat under load.','Keep the isolating switch easy to reach and labelled.','Get a commissioning record and the invoice.','Ask about a separate meter or a time-of-day tariff, and whether it helps you.','Run one full unattended charge to see that all is well.'],
- delivery:['Match the chassis number, manufacturing date, battery and motor variant to the invoice.','Inspect the body, wheels, tyres, underbody battery shield and panel gaps.','Test AC charging, and a short fast charge if you can.','Confirm the portable charger, wallbox, cable and accessories you were promised.','Check the battery percentage, range display, regeneration levels, driving modes and cameras.','Collect the warranty papers and the service contact.','Ask the dealer to show the charge-port emergency release.','Test the seat belts, safety systems and the 12-volt battery.','Install the maker’s app, link the car and check the connected features.','Keep copies of the charger invoice and any battery contract.'],
+ delivery:['Match the chassis number, manufacturing date, battery and motor variant to the invoice.','Inspect the body, wheels, tyres, underbody battery shield and panel gaps.','Test AC charging, and a short fast charge if you can.','Confirm the portable charger, wallbox, cable and accessories you were promised.','Check the battery percentage, range display, regeneration levels, driving modes and cameras.','Collect the warranty papers and the service contact.','Check the registration papers. Electric cars get a green number plate. Ask when the permanent registration card and plates will arrive.','Ask the dealer to show the charge-port emergency release.','Test the seat belts, safety systems and the 12-volt battery.','Install the maker’s app, link the car and check the connected features.','Keep copies of the charger invoice and any battery contract.'],
  public:['Check the plug type: most newer cars use CCS2 for fast charging. Confirm in your manual.','Check the operator app for live status, price, power and access.','Set up payment, and check your mobile network before you travel.','Know the next backup charger before you leave.','Park safely, switch off or select Park, then start the session and plug in firmly.','Check that charging starts, and watch the kW and the cost.','Never force a locked plug, and never use an unsafe adapter.','Stop the session, wait for the plug to release, and put the cable back neatly.','Watch for parking or idle fees.','Save the helpline number and the receipt.'],
  care:['Follow your maker’s advice for your battery type. There is no single rule for everyone.','For daily use many makers suggest keeping the charge limit at about 80%. Charge to full just before a long trip.','If your manual asks for a 100% charge now and then (some LFP batteries), follow it.','Avoid leaving the car parked at a full charge for long periods in heat, and avoid leaving it nearly empty for long.','Use scheduled charging, and park in shade in extreme heat.','Pre-condition the battery for fast charging if your car can.','Keep tyres, alignment and coolant on the recommended schedule.','Ask the service centre for a battery health check if you worry about capacity.','Install software updates the proper way, and check recall notices.','After a hard hit under the car or a flood, get an authorised inspection.'],
  first30:['Get your electrician to fit and test the charger before delivery day.','Install 3-4 charging apps and set up payment in each.','Set the car’s charge limit to about 80% for daily use, if your maker agrees.','Set a night charging schedule if your tariff is cheaper then.','Read the manual sections on the tyre kit, towing and the emergency release.','Note your first-week km per kWh to learn your real range.','Check tyre pressure every month, because it affects range.','Save the roadside-assistance number. Learn how the car must be towed.','Save the nearest fast charger and service centre in your phone.','Check the 12-volt battery. A weak one can stop the car even when the big battery is full.'],
@@ -1624,7 +1646,7 @@ function viewBuy(){
   '<div class="tbl"><table><thead><tr><th>Car</th><th>Result found</th><th>Rating</th></tr></thead><tbody>'+SAFETY.map(function(s){return '<tr><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td><td>'+pill(s[2].indexOf('5')>-1?'good':s[2]==='None found'?'':'info',s[2])+'</td></tr>';}).join('')+'</tbody></table></div></section>'+
 
   '<section class="sec" id="by-wait">'+secHead('','Wait or buy?','Cars coming soon','Dates are announced or reported, and can slip. A new launch often makes the older model cheaper or brings a better version.')+
-  '<div class="tbl"><table><thead><tr><th>Car</th><th>Expected</th><th class="r">Price (guess)</th></tr></thead><tbody>'+UPCOMING.map(function(u){return '<tr><td><b>'+u[0]+'</b></td><td>'+u[1]+'</td><td class="r n">'+u[2]+'</td></tr>';}).join('')+'</tbody></table></div>'+
+  '<div class="grid" style="margin-bottom:14px">'+UPCOMING.map(function(u){return '<div class="card flat stack"><h3 data-vis="h4" style="font-size:19px">'+u[0]+'</h3><p class="small" style="margin:0"><b>When:</b> '+u[1]+'</p><p class="small" style="margin:0"><b>Price (a guess):</b> '+u[2]+'</p></div>';}).join('')+'</div>'+
   note('info','A simple rule','<p>If you need a car now, buy now. Waiting for a launch “just in case” can mean waiting forever. Wait only if a coming car is the exact one you want.</p>')+'</section>'+
 
   '<section class="sec" id="by-faq">'+secHead('','Questions','Common worries','')+
@@ -1667,8 +1689,8 @@ var VIEWS=[
 ];
 var _built={};
 function buildShell(){
-  var top='<header class="topbar"><div class="wrap"><a class="brand" href="#learn"><span class="sign">EV Raasta</span><small>Electric cars in India, explained</small></a><nav class="tabs" aria-label="Sections">'+VIEWS.map(function(v){return '<a href="#'+v[0]+'" data-tab="'+v[0]+'">'+v[1]+'</a>';}).join('')+'</nav><div class="tools"><button class="tbtn" id="favlink" aria-label="Show my saved cars" title="Saved cars">♥ <span id="favcount">0</span></button><button class="tbtn" id="themebtn" aria-label="Switch between light and dark" title="Light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg></button></div></div></header>';
-  var main='<main class="wrap">'+VIEWS.map(function(v){return '<div class="view" id="v-'+v[0]+'" hidden></div>';}).join('')+
+  var top='<a class="skip" href="#main" data-skip="1">Skip to content</a><header class="topbar"><div class="wrap"><a class="brand" href="#learn"><span class="sign">EV Raasta</span><small>Electric cars in India, explained</small></a><nav class="tabs" aria-label="Sections">'+VIEWS.map(function(v){return '<a href="#'+v[0]+'" data-tab="'+v[0]+'">'+v[1]+'</a>';}).join('')+'</nav><div class="tools"><button class="tbtn" id="favlink" aria-label="Show my saved cars" title="Saved cars">♥ <span id="favcount">0</span></button><button class="tbtn" id="themebtn" aria-label="Switch between light and dark" title="Light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg></button></div></div></header>';
+  var main='<main class="wrap" id="main" tabindex="-1">'+VIEWS.map(function(v){return '<div class="view" id="v-'+v[0]+'" hidden></div>';}).join('')+
     '<footer><p><b>EV Raasta</b> · Data gathered November 2026 from maker pages, road tests, enthusiast and news sites. Prices, rental rates, state rules and charger counts change often, so confirm with the dealer. Not financial or legal advice. Not affiliated with any car maker or charging company.</p><p>India state outlines: <a href="https://github.com/VictorCazanave/svg-maps" target="_blank" rel="noopener">svg-maps</a> (CC BY 4.0). The map is a simple schematic, not an official boundary map.</p></footer></main>';
   var nav='<nav class="bottomnav" aria-label="Sections">'+VIEWS.map(function(v){return '<a href="#'+v[0]+'" data-tab="'+v[0]+'">'+ICONS[v[0]]+'<span>'+v[1]+'</span></a>';}).join('')+'</nav>';
   document.getElementById('app').innerHTML=top+main+nav;
@@ -1691,7 +1713,7 @@ function show(name){
   if(!_built[name]){ root.innerHTML=v[2](); fixHeadings(root); _built[name]=1; try{ v[3](root); }catch(e){ console.error('bind '+name,e); } }
   document.title='EV Raasta · '+v[1];
 }
-function route(){ var h=(location.hash||'').replace('#',''); show(h); if(!_first) { _first=1; } else window.scrollTo(0,0); }
+function route(){ var h=(location.hash||'').replace('#',''); show(h); if(!_first) { _first=1; } else { window.scrollTo(0,0); var m=document.getElementById('main'); if(m) try{ m.focus({preventScroll:true}); }catch(e){} } }
 var _first=0;
 function effectiveTheme(){ var t=document.documentElement.getAttribute('data-theme'); if(t) return t; return (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'; }
 function applyTheme(t){ if(t==='dark'||t==='light') document.documentElement.setAttribute('data-theme',t); else document.documentElement.removeAttribute('data-theme');
@@ -1705,9 +1727,12 @@ function initApp(){
   document.getElementById('favlink').addEventListener('click',function(){ if(location.hash!=='#cars') location.hash='cars'; else show('cars'); var go=function(){ var b=document.getElementById('x-fav'); if(b&&!CS.favOnly) b.click(); var el=document.getElementById('cars-all'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }; setTimeout(go,60); });
   document.addEventListener('favchange',updateFavCount);
   document.addEventListener('click',function(e){
+    var sk=e.target.closest('[data-skip]'); if(sk){ e.preventDefault(); var mm=document.getElementById('main'); if(mm){ mm.focus(); } return; }
     var j=e.target.closest('[data-jump]'); if(j){ var el=document.getElementById(j.getAttribute('data-jump')); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     var g=e.target.closest('[data-go]'); if(g){ var t=g.getAttribute('data-go'); if(location.hash==='#'+t) window.scrollTo(0,0); else location.hash=t; }
   });
+  /* printing: open every checklist and answer so nothing is hidden on paper, then put them back */
+  var _po=[]; window.addEventListener('beforeprint',function(){ _po=[]; $$('details').forEach(function(d){ if(!d.open){ d.open=true; _po.push(d); } }); }); window.addEventListener('afterprint',function(){ _po.forEach(function(d){ d.open=false; }); _po=[]; });
   window.addEventListener('hashchange',route); route();
 }
 initApp();
