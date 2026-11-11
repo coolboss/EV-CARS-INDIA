@@ -283,6 +283,12 @@ main[tabindex]:focus,main[tabindex]:focus-visible{outline:none}
   :focus-visible{outline:3px solid Highlight!important}
 }
 
+.sb{display:grid;gap:9px;min-width:0}
+.sb .sbr{display:grid;grid-template-columns:1fr auto;gap:3px 8px;font-size:14px;align-items:baseline}
+.sb .bar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--surface2);position:relative;overflow:hidden}
+.sb .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--s1);border-radius:4px}
+.sb .num{white-space:nowrap;font-variant-numeric:tabular-nums}
+
 </style>
 </head>
 <body>
@@ -296,7 +302,7 @@ main[tabindex]:focus,main[tabindex]:focus-visible{outline:none}
    dc = minutes for roughly 10-80% on a DC fast charger, dce:1 means the number is a class estimate
    m = [min for 20-80%, min for 80-100% (0 = not reported), test charger kW] measured by Autocar India; meas:1 means dc was derived from it
    src = link to the independent test article for the tested range
-   rs = [city km, highway km] when the test article reports the split (the tested figure is the blend of the two)
+   rs = [city km, highway km] from the same Autocar test; the tested figure is the blend of the two. rsd:1 = worked out from the reported km per kWh x battery size
    ac = onboard AC charger kW (estimate unless noted)   conf: h = well cross-checked, m = some conflict, l = thin data */
 var CARS = [
 /* ---------- up to 30 kWh : small city cars ---------- */
@@ -314,7 +320,7 @@ var CARS = [
  baas:{type:'A',own:11.99,price:6.89,perKm:2.26,minKm:2000,variant:'eC3X Live'},
  note:'Tested 228 km on the eC3. Some sites list a 330 km claim on a newer test cycle.'},
 /* ---------- 30 to 45 kWh : compact ---------- */
-{id:'punch',src:'https://www.autocarindia.com/auto-features/2026-tata-punch-ev-real-world-range-tested-explained-440983',br:'Tata',nm:'Punch EV',bat:40,bats:'30 / 40',p:[9.79,12.99],cl:468,re:304,rk:'T',body:'Compact SUV',seats:5,dc:32,meas:1,m:[27,31,180],ac:7.2,wr:'15 yr / unlimited km for first owner (40 kWh)',ncap:'5★ Bharat NCAP (adult 31.09/32, child 45/49)',conf:'m',pick:'compact',
+{id:'punch',src:'https://www.autocarindia.com/auto-features/2026-tata-punch-ev-real-world-range-tested-explained-440983',br:'Tata',nm:'Punch EV',bat:40,bats:'30 / 40',p:[9.79,12.99],cl:468,re:304,rs:[317,291],rk:'T',body:'Compact SUV',seats:5,dc:32,meas:1,m:[27,31,180],ac:7.2,wr:'15 yr / unlimited km for first owner (40 kWh)',ncap:'5★ Bharat NCAP (adult 31.09/32, child 45/49)',conf:'m',pick:'compact',
  baas:{type:'B',own:9.79,price:6.59,perKm:2.6,basis:1800,variant:'30 kWh'},
  note:'The 468 km claim is on the old cycle; some sites list 355 km. Charging time of 26 minutes is as listed by one site and other sources differ, so treat it as approximate.'},
 {id:'nexon',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'Tata',nm:'Nexon EV',bat:45,bats:'30 / 45',p:[12.49,17.89],cl:489,re:350,rk:'T',body:'Compact SUV',seats:5,dc:60,ac:7.2,wr:'15 yr / unlimited km for first owner (45 kWh)',ncap:'5★ Bharat NCAP (adult 29.86/32, child 44.95/49)',conf:'h',
@@ -324,7 +330,7 @@ var CARS = [
  note:'Quick for its size, but the range figure here is a planning estimate, not a test. Smaller battery makes it weaker for long trips.'},
 {id:'xuv400',br:'Mahindra',nm:'XUV400 EV',bat:39.4,bats:'34.5 / 39.4',p:[15.49,17.69],cl:456,re:282,rk:'T',body:'Compact SUV',seats:5,dc:50,dce:1,ac:7.2,wr:'8 yr / 1.6 lakh km',ncap:'',conf:'m',
  note:'282 km measured by CarWale. AC charging takes about 6.5 hours.'},
-{id:'windsor',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'MG',nm:'Windsor EV',bat:38,bats:'38',p:[14.85,17.14],cl:332,re:308,rk:'T',body:'Crossover',seats:5,dc:45,ac:7.4,wr:'Lifetime for first owner',ncap:'No Bharat NCAP score found',conf:'m',
+{id:'windsor',src:'https://www.autocarindia.com/auto-features/every-mass-market-ev-real-world-range-tested-434105',br:'MG',nm:'Windsor EV',bat:38,bats:'38',p:[14.85,17.14],cl:332,re:308,rs:[327,289],rsd:1,rk:'T',body:'Crossover',seats:5,dc:45,ac:7.4,wr:'Lifetime for first owner',ncap:'No Bharat NCAP score found',conf:'m',
  baas:{type:'A',own:14.85,price:9.99,perKm:4.3,minKm:1500,variant:'38 kWh'},
  note:'Tested range is very close to the claim. Roomy rear seat. MG now lists BaaS at ₹4.3/km (one magazine listed ₹3.99/km in Sept 2026).'},
 /* ---------- 45 to 60 kWh : mainstream family ---------- */
@@ -357,10 +363,10 @@ var CARS = [
  note:'Seven seats. VinFast cut its price by ₹4.10 lakh in Nov 2026, so check the latest price.'},
 {id:'atto3',br:'BYD',nm:'Atto 3',bat:60.48,bats:'49.92 / 60.48',p:[24.99,34.49],cl:521,re:400,rk:'E',body:'SUV',seats:5,dc:45,dce:1,ac:7,wr:'8 yr (BYD standard)',ncap:'5★ Euro NCAP (not Bharat NCAP)',conf:'m',
  note:'Team-BHP owners report slow spare parts and weak cabin cooling in some cases. Check local BYD service before you buy.'},
-{id:'sierra',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Sierra EV',bat:75,bats:'63 / 75',p:[18.79,25.99],cl:624,re:438,rk:'T',body:'SUV',seats:5,dc:40,dce:1,ac:7.2,wr:'15 yr / unlimited km; next owner gets 10 yr / 2 lakh km',ncap:'',conf:'m',pick:'longalt',
+{id:'sierra',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Sierra EV',bat:75,bats:'63 / 75',p:[18.79,25.99],cl:624,re:438,rs:[438,437],rk:'T',body:'SUV',seats:5,dc:40,dce:1,ac:7.2,wr:'15 yr / unlimited km; next owner gets 10 yr / 2 lakh km',ncap:'',conf:'m',pick:'longalt',
  baas:{type:'B',own:18.79,price:11.99,perKm:5.5,basis:1800,variant:'63 kWh'},
  note:'438 km was tested on the AWD version. Strong challenger to the Mahindras. Compare ride and refinement before you book.'},
-{id:'harrier',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Harrier EV',bat:75,bats:'65 / 75',p:[21.79,29.29],cl:622,re:401,rk:'T',body:'SUV',seats:5,dc:25,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'m',
+{id:'harrier',src:'https://www.autocarindia.com/auto-features/tata-sierra-ev-awd-vs-harrier-ev-awd-real-world-range-compared-441233',br:'Tata',nm:'Harrier EV',bat:75,bats:'65 / 75',p:[21.79,29.29],cl:622,re:401,rs:[408,393],rk:'T',body:'SUV',seats:5,dc:25,ac:7.2,wr:'15 yr / unlimited km for first owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'m',
  baas:{type:'B',own:21.79,price:14.49,perKm:5.9,basis:1800,variant:'65 kWh'},
  note:'AWD and 120 kW charging. The AWD version tested 401 km and used the most energy of the EVs tested (5.35 km/kWh).'},
 {id:'be6',br:'Mahindra',nm:'BE 6 Sporteq',bat:79,bats:'59 / 70 / 79',p:[19.45,27.70],cl:683,re:449,rk:'T',body:'SUV coupe',seats:5,dc:38,meas:1,m:[33,35,150],ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 31.97/32, child 45/49)',conf:'m',
@@ -369,10 +375,10 @@ var CARS = [
 {id:'xev9e',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9e-real-world-range-tested-explained-436045',br:'Mahindra',nm:'XEV 9e',bat:79,bats:'59 / 79',p:[21.90,31.25],cl:656,re:456,rs:[425,488],rk:'T',body:'SUV coupe',seats:5,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'5★ Bharat NCAP (adult 32/32, child 45/49)',conf:'h',pick:'long5',
  baas:{type:'B',own:21.90,price:13.90,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'Great ride, big boot, 180 kW charging. Autocar’s 456 km is a blend: 425 km on its city loop and 488 km on its highway loop, worked out from the charge used in about 40°C heat, not by driving to empty. Mahindra says 500 km or more in real use. Mild weather and gentle driving can beat 456 km, and hard driving or heat can fall short. The 20-minute fast-charge time is the maker’s figure: the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger in Autocar’s test. The touchscreen software is complex but Autocar says updates fixed earlier bugs. Owners report waits of about 4 months for top variants.'},
-{id:'xev9s',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9s-real-world-range-tested-explained-440015',br:'Mahindra',nm:'XEV 9S',bat:79,bats:'59 / 70 / 79',p:[20.65,30.90],cl:679,re:478,rk:'T',body:'SUV',seats:7,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'',conf:'m',pick:'long7',
+{id:'xev9s',src:'https://www.autocarindia.com/auto-features/mahindra-xev-9s-real-world-range-tested-explained-440015',br:'Mahindra',nm:'XEV 9S',bat:79,bats:'59 / 70 / 79',p:[20.65,30.90],cl:679,re:478,rs:[478,477],rk:'T',body:'SUV',seats:7,dc:20,ac:11.2,wr:'Lifetime for first private owner',ncap:'',conf:'m',pick:'long7',
  baas:{type:'B',own:20.65,price:12.65,perKm:3.75,basis:1800,variant:'59 kWh'},
  note:'Went the furthest of any mass-market EV in Autocar’s tests (477.5 km). No separate crash-test result found for the 9S. The 20-minute fast-charge time is the maker’s figure (the similar BE 6 took 33 minutes for 20-80% on a 150 kW charger). Three rows or six captain seats. Starting price is listed from ₹19.95 to ₹21.40 lakh by different sources.'},
-{id:'hector',src:'https://www.autocarindia.com/auto-features/mg-hector-tomahawk-ev-real-world-range-tested-explained-441165',br:'MG',nm:'Hector Tomahawk EV',bat:69.2,bats:'69.2',p:[20.25,24.25],cl:517,re:446,rk:'T',body:'SUV',seats:7,dc:45,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'m',
+{id:'hector',src:'https://www.autocarindia.com/auto-features/mg-hector-tomahawk-ev-real-world-range-tested-explained-441165',br:'MG',nm:'Hector Tomahawk EV',bat:69.2,bats:'69.2',p:[20.25,24.25],cl:517,re:446,rs:[495,397],rk:'T',body:'SUV',seats:7,dc:45,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'m',
  baas:{type:'B',own:19.50,price:13.99,perKm:4.9,basis:1800,variant:'base (pre-hike price)'},
  note:'Tested 446 km, very good for the price. MG raised the price by ₹75,000 on 6 Nov 2026.'},
 {id:'vf7',br:'VinFast',nm:'VF7',bat:70.8,bats:'59.6 / 70.8',p:[22.99,28.09],cl:510,re:391,rk:'T',body:'SUV',seats:5,dc:44,meas:1,m:[38,0,180],ac:11,wr:'Not stated',ncap:'No Bharat NCAP score found',conf:'m',
@@ -385,14 +391,14 @@ var CARS = [
 {id:'countryman',br:'MINI',nm:'Countryman Electric',bat:66.45,bats:'66.45',p:[54.90,66.90],cl:450,re:375,rk:'E',body:'SUV',seats:5,dc:30,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Range is an estimate.'},
 {id:'ex40',br:'Volvo',nm:'EX40',bat:69,bats:'69',p:[49.00,50.10],cl:592,re:null,rk:'',body:'SUV',seats:5,dc:30,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Range depends on the variant, and no reliable test was found.'},
 {id:'ec40',br:'Volvo',nm:'EC40',bat:78,bats:'78',p:[59.00,59.00],cl:530,re:400,rk:'E',body:'SUV coupe',seats:5,dc:30,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Range is an estimate.'},
-{id:'modely',src:'https://www.autocarindia.com/auto-features/tesla-model-y-rwd-real-world-range-tested-explained-440915',br:'Tesla',nm:'Model Y (RWD)',bat:60,bats:'60 usable (about 64 gross)',p:[50.89,59.89],cl:500,re:370,rk:'T',body:'SUV',seats:5,dc:27,meas:1,m:[23,30,250],ac:11,wr:'Not stated',ncap:'Top ratings from NHTSA and Euro NCAP',conf:'m',
+{id:'modely',src:'https://www.autocarindia.com/auto-features/tesla-model-y-rwd-real-world-range-tested-explained-440915',br:'Tesla',nm:'Model Y (RWD)',bat:60,bats:'60 usable (about 64 gross)',p:[50.89,59.89],cl:500,re:370,rs:[350,391],rk:'T',body:'SUV',seats:5,dc:27,meas:1,m:[23,30,250],ac:11,wr:'Not stated',ncap:'Top ratings from NHTSA and Euro NCAP',conf:'m',
  note:'Best fast-charging network of any brand (up to 250 kW) but Tesla’s chargers in India are for Tesla owners only, and service points are few. Tested 370 km, so it is not the efficiency leader.'},
 {id:'lexus',br:'Lexus',nm:'ES 500e',bat:74.68,bats:'74.68',p:[89.99,91.20],cl:580,re:440,rk:'E',body:'Sedan',seats:5,dc:30,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Range is an estimate.'},
 {id:'cyber',br:'MG',nm:'Cyberster',bat:77,bats:'77',p:[75,88],cl:580,re:450,rk:'E',body:'Roadster',seats:2,dc:40,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Two-seat sports roadster. Price range differs across sources.'},
 /* ---------- premium 80 to 100 kWh ---------- */
 {id:'seal',br:'BYD',nm:'Seal',bat:82.56,bats:'61.44 / 82.56',p:[41.50,53.65],cl:650,re:470,rk:'E',body:'Sedan',seats:5,dc:33,ac:11,wr:'8 yr (BYD standard)',ncap:'',conf:'m',pick:'premSedan',note:'Good value electric sedan. BYD’s service and parts network is smaller than the German brands’.'},
 {id:'sealion7',br:'BYD',nm:'Sealion 7',bat:82.56,bats:'71.8 / 82.56',p:[41.90,55.90],cl:542,re:375,rk:'T',body:'SUV',seats:5,dc:24,ac:11,wr:'8 yr (BYD standard)',ncap:'',conf:'m',note:'Fast charging, but only 375 km tested on the AWD.'},
-{id:'ioniq5',src:'https://www.autocarindia.com/auto-features/2026-hyundai-ioniq-5-real-world-range-tested-explained-440980',br:'Hyundai',nm:'Ioniq 5',bat:84,bats:'84',p:[46.05,55.71],cl:690,re:501,rk:'T',body:'SUV',seats:5,dc:19,meas:1,m:[16,33,360],ac:11,wr:'8 yr / 1.6 lakh km',ncap:'',conf:'m',pick:'premium',
+{id:'ioniq5',src:'https://www.autocarindia.com/auto-features/2026-hyundai-ioniq-5-real-world-range-tested-explained-440980',br:'Hyundai',nm:'Ioniq 5',bat:84,bats:'84',p:[46.05,55.71],cl:690,re:501,rs:[523,479],rk:'T',body:'SUV',seats:5,dc:19,meas:1,m:[16,33,360],ac:11,wr:'8 yr / 1.6 lakh km',ncap:'',conf:'m',pick:'premium',
  note:'800V platform. Autocar measured 20-80% in 16 minutes on a 360 kW charger. Sources differ on battery and price: older listings show ₹46.05 lakh, newer ones ₹55.71 lakh with an 84 kWh pack. Confirm at the dealer.'},
 {id:'ev6',br:'Kia',nm:'EV6',bat:84,bats:'84',p:[65.98,65.98],cl:663,re:498,rk:'T',body:'SUV',seats:5,dc:18,ac:11,wr:'8 yr / 1.6 lakh km',ncap:'',conf:'m',note:'Very fast charging and about the same real range as the Ioniq 5.'},
 {id:'modelyl',br:'Tesla',nm:'Model Y L (6-seat)',bat:88.2,bats:'about 88.2 (estimate)',p:[61.99,61.99],cl:681,re:485,rk:'E',body:'SUV',seats:6,dc:25,dce:1,ac:11,wr:'Not stated',ncap:'',conf:'l',note:'Tesla does not publish full battery sizes, so the 88.2 kWh figure is an estimate.'},
@@ -1039,6 +1045,11 @@ var BUDGETS=[8,10,12,15,18,20,25,30,40,50,60,80,100,150,300,1000];
 var BODYGROUP={all:'All body types',small:'Small and hatchback',sedan:'Sedan and coupe',suv:'SUV and crossover',mpv:'MPV and 7-seat'};
 function bodyGroup(c){ var b=c.body; if(/Micro|Hatch/.test(b)) return 'small'; if(/Sedan|Coupe|Roadster/.test(b)) return 'sedan'; if(/MPV/.test(b)||c.seats>=6) return 'mpv'; return 'suv'; }
 
+function styleBars(c){
+  if(!c.rs) return '<span class="muted">'+(c.rk==='T'?'The test published only one blended figure.':'No split available. This is an estimate.')+'</span>';
+  var top=Math.max(c.cl||0,c.rs[0],c.rs[1],c.re), rows=[['City loop',c.rs[0]],['Blend (tested)',c.re],['Highway loop',c.rs[1]]];
+  return '<div class="sb">'+rows.map(function(r,i){return '<div class="sbr"'+(i===1?' style="font-weight:700"':'')+'><span>'+r[0]+'</span><span class="num">'+r[1]+' km</span><div class="bar"><i style="width:'+Math.round(r[1]/top*100)+'%"></i></div></div>';}).join('')+'</div><span class="muted small" style="display:block;margin-top:6px">Bars compare with the claimed range ('+c.cl+' km). City loop: stop-go with strong regen. Highway loop: steadier. Test speeds were not published.'+(c.rsd?' Worked out from the test’s km per kWh.':'')+'</span>';
+}
 function carCard(c,o){
   o=o||{}; var cpk=costPerKm(c,CS.tariff), pct=c.re&&c.cl?Math.round(c.re/c.cl*100):null, max=Math.max(c.cl,c.re||0,1);
   var tested=c.re?'<b>'+c.re+'</b>':'<b>-</b>'; var open=!!CS.open[c.id];
@@ -1061,7 +1072,8 @@ function carCard(c,o){
     '<dt>Battery</dt><dd>'+esc(c.bats)+' kWh · '+CLASS_LABEL[batClass(c.bat)]+'</dd>'+
     '<dt>Seats · body</dt><dd>'+c.seats+' · '+esc(c.body)+'</dd>'+
     '<dt>Claimed range</dt><dd>'+(c.cl?c.cl+' km':'not found')+'</dd>'+
-    '<dt>Real range</dt><dd>'+(c.re?c.re+' km '+(c.rk==='T'?'(independent test)':'(estimate)'):'No reliable figure found')+(pct?' · '+pct+'% of claim':'')+(c.rs?'<br><span class="muted">City loop '+c.rs[0]+' km, highway loop '+c.rs[1]+' km. The tested figure blends the two.</span>':'')+'</dd>'+
+    '<dt>Real range</dt><dd>'+(c.re?c.re+' km '+(c.rk==='T'?'(independent test)':'(estimate)'):'No reliable figure found')+(pct?' · '+pct+'% of claim':'')+'</dd>'+
+    '<dt>By driving style</dt><dd>'+styleBars(c)+'</dd>'+
     '<dt>Range source</dt><dd>'+(c.src?'<a href="'+c.src+'" target="_blank" rel="noopener noreferrer">Independent test article (Autocar India)</a>':(c.rk==='T'?'Reader-supplied guide and press reports':c.rk==='E'?'Estimate from the claim and similar cars':'None found'))+'</dd>'+
     '<dt>Efficiency</dt><dd>'+(c.re?(c.re/c.bat).toFixed(1)+' km per kWh':'-')+'</dd>'+
     '<dt>Fast charging</dt><dd>'+(c.dc?(c.meas?'about '+c.dc+' min for 10-80%. Measured: '+c.m[0]+' min for 20-80%'+(c.m[1]?', '+c.m[1]+' min for 80-100%':'')+' on a '+c.m[2]+' kW charger (Autocar India)':'about '+c.dc+' min for 10-80%'+(c.dce?' (class estimate)':' (maker or review figure, not measured)')):'AC charging only')+'</dd>'+
@@ -1171,6 +1183,7 @@ function bindCars(root){
      ['Battery (kWh)',function(c){return c.bat;},best(function(c){return c.bat;},1)],
      ['Claimed range',function(c){return c.cl?c.cl+' km':'-';},[]],
      ['Real range',function(c){return c.re?c.re+' km'+(c.rk==='E'?' (est.)':''):'-';},best(function(c){return c.re;},1)],
+     ['City / highway test',function(c){return c.rs?c.rs[0]+' / '+c.rs[1]+' km':'blend only';},[]],
      ['% of claim',function(c){return c.re&&c.cl?Math.round(c.re/c.cl*100)+'%':'-';},best(function(c){return c.re&&c.cl?c.re/c.cl:null;},1)],
      ['km per kWh',function(c){return c.re?(c.re/c.bat).toFixed(1):'-';},best(function(c){return c.re?c.re/c.bat:null;},1)],
      ['Electricity ₹/km',function(c){var v=costPerKm(c,CS.tariff);return v?'₹'+v.toFixed(2):'-';},best(function(c){return costPerKm(c,CS.tariff);},-1)],
